@@ -7,10 +7,10 @@ import { StockCard } from './components/StockCard'
 import { TradeForm } from './components/TradeForm'
 
 // Data
-import { positions, stocks, trades } from './data/stockData';
+import { positions, stocks, trades, holdings } from './data/stockData';
 
 // Types
-import type { Positions, Stock, Trade } from './types/stock.types';
+import type { Positions, Stock, Trade, Holdings } from './types/stock.types';
 
 
 function App() {
@@ -36,6 +36,17 @@ function App() {
       ...pos,
       ltp: currentPrice,
       pnl: (currentPrice - pos.Avg_Price) * pos.Qty
+    }
+  })
+
+  const holdingsData = holdings.map((pos) => {
+    const currentStock = stocks.find(s => s.symbol === pos.symbol)
+    const currentPrice = currentStock ? currentStock.price : pos.currentValue
+
+    return {
+      ...pos,
+      currentValue: currentPrice,
+      pnl: (currentPrice - pos.investedValue) * pos.qty
     }
   })
   // Add a new trade (receives NewTradeInput — no id/date)
@@ -130,7 +141,30 @@ function App() {
         ]}
       />
 
-      {/* 3. Trade History Table - Added sortable to Date and Symbol */}
+      {/* 3. Holdings Table */}
+      <h2 style={{ color: '#1E40AF' }}>Holdings</h2>
+      <DataTable<Holdings>
+        data={holdingsData}
+        rowKey='id'
+        onRowClick={(pos) => console.log('Holdings selected:', pos.symbol)}
+        columns={[
+          { key: 'symbol', header: 'Symbol', sortable: true },
+          { key: 'qty', header: 'Qty', sortable: true },
+          { key: 'investedValue', header: 'Invested Value', sortable: true, render: v => `$${Number(v).toFixed(2)}` },
+          { key: 'currentValue', header: 'Current Value', sortable: true, render: v => `$${Number(v).toFixed(2)}` },
+          {
+            key: 'totalReturn',
+            header: 'Total Return',
+            sortable: true,
+            render: v => (
+              <span style={{ color: Number(v) >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
+                {Number(v) >= 0 ? '+' : ''}{Number(v).toFixed(2)}
+              </span>
+            )
+          }
+        ]}
+      />
+      {/* 4. Trade History Table - Added sortable to Date and Symbol */}
       <h2 style={{ color: '#1E40AF' }}>Trade Table</h2>
 
       <DataTable<Trade>

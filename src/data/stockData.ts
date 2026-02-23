@@ -1,4 +1,5 @@
-import type { Stock, Trade,Positions } from '../types/stock.types';
+import type { Holdings, Positions, Stock, Trade } from '../types/stock.types';
+
 export const positions: Positions[] = [
     // --- Technology ---
     {
@@ -184,3 +185,47 @@ export const trades: Trade[] = [
         quantity: 8, price: 265.00, date: '2024-03-10'
     },
 ];
+
+export const holdings: Holdings[] = [
+    {
+        id: 'h1',
+        symbol: 'AAPL',
+        qty: 10,
+        investedValue: 1855.00,
+        currentValue: 2645.80,
+        totalReturn: 790.80
+    },
+    {
+        id: 'h2',
+        symbol: 'NVDA',
+        qty: 25,
+        investedValue: 3625.00,
+        currentValue: 4745.50,
+        totalReturn: 1120.50
+    },
+    {
+        id: 'h3',
+        symbol: 'MSFT',
+        qty: 8,
+        investedValue: 3080.80,
+        currentValue: 3177.84,
+        totalReturn: 97.04
+    },
+    {
+        id: 'h4',
+        symbol: 'JPM',
+        qty: 20,
+        investedValue: 3880.00,
+        currentValue: 6215.80,
+        totalReturn: 2335.80
+    },
+    {
+        id: 'h5',
+        symbol: 'TSLA',
+        qty: 5,
+        investedValue: 1300.00,
+        currentValue: 2059.10,
+        totalReturn: 759.10
+    }
+];
+

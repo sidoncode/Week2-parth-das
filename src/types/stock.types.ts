@@ -33,3 +33,13 @@ export interface Positions{
     ltp:number,
     pnl:number,
 }
+
+export interface Holdings{
+    id:string,
+    symbol:string,
+    qty:number,
+    investedValue:number,
+    currentValue:number,
+    totalReturn:number,
+    
+}
