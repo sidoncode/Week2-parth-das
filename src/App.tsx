@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { DataTable } from './components/DataTable'
+import { Pagination } from './components/Pagination'
 import { PortfolioSummary } from './components/PortfolioSummary'
 import { SearchBar } from './components/SearchBar'
 import { StockCard } from './components/StockCard'
@@ -18,6 +19,10 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sectorFilter, setSectorFilter] = useState('');
   const [tradeHistory, setTradeHistory] = useState<Trade[]>(trades);
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   // Filter stocks based on search and sector
   const filteredStocks = stocks.filter(s => {
@@ -26,6 +31,23 @@ function App() {
     const matchesSector = !sectorFilter || s.sector === sectorFilter;
     return matchesSearch && matchesSector;
   });
+
+  // Calculate paginated stocks
+  const totalPages = Math.ceil(filteredStocks.length / itemsPerPage);
+  const paginatedStocks = filteredStocks.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset to first page on search
+  };
+
+  const handleSectorChange = (sector: string) => {
+    setSectorFilter(sector);
+    setCurrentPage(1); // Reset to first page on sector change
+  };
 
   // map the matching stocks for Positions sections
   const positionsData = positions.map((pos) => {
@@ -68,11 +90,23 @@ function App() {
       <h1 style={{ color: '#1E3A8A' }}>Stock Market Dashboard</h1>
 
       {/* Event Typing */}
-      <SearchBar
-        onSearch={setSearchQuery}
-        onFilterChange={setSectorFilter}
-        placeholder='Search by symbol or name...'
-      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <SearchBar
+          onSearch={handleSearch}
+          onFilterChange={handleSectorChange}
+          placeholder='Search by symbol or name...'
+        />
+        <button 
+          onClick={() => {
+            setSearchQuery('');
+            setSectorFilter('');
+            setCurrentPage(1);
+          }}
+          style={{ padding: '8px 16px', backgroundColor: '#1E40AF', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', marginBottom: '16px' }}
+        >
+          Show All Stocks
+        </button>
+      </div>
 
       {/* Typing Props */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
@@ -90,9 +124,9 @@ function App() {
       <PortfolioSummary availableStocks={stocks} />
 
       {/* Generic Components — Stock table */}
-      <h2 style={{ color: '#1E40AF' }}>Live Quotes</h2>
+      <h2 style={{ color: '#1E40AF' }}>Live Quotes (Page {currentPage} of {totalPages})</h2>
       <DataTable<Stock>
-        data={filteredStocks}
+        data={paginatedStocks}
         rowKey='id'
         onRowClick={setSelectedStock}
         emptyMessage='No stocks match your search.'
@@ -117,6 +151,11 @@ function App() {
             render: v => Number(v).toLocaleString()
           },
         ]}
+      />
+      <Pagination 
+        currentPage={currentPage} 
+        totalPages={totalPages} 
+        onPageChange={setCurrentPage} 
       />
 
       {/* Positions Table */}
