@@ -63,10 +63,10 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ availableSto
 
             <select value={selectedSector}
             onChange={(e)=>setSelectedSector(e.target.value)}>
-                <option>All</option>
-                <option>Technology</option>
-                <option>Finance</option>
-                <option>Automotive</option>
+                <option value=''>All</option>
+                <option value='Technology'>Technology</option>
+                <option value='Finance'>Finance</option>
+                <option value='Automotive'>Automotive</option>
             </select>
 
             <ul>
