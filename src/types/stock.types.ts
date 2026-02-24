@@ -32,6 +32,7 @@ export interface Position{
     Avg_Price:number,
     ltp:number,
     pnl:number,
+    pnlPct?:number,
 }
 
 export interface Holding{

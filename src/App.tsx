@@ -1,25 +1,19 @@
-import { useMemo } from 'react'
- 
-import React, { lazy, useState } from 'react';
-import './App.css'
-import { DataTable } from './components/DataTable'
-import { Pagination } from './components/Pagination'
-import { PortfolioSummary } from './components/PortfolioSummary'
-import { SearchBar } from './components/SearchBar'
-import { StockCard } from './components/StockCard'
+import { lazy, useState } from 'react';
+import './App.css';
+// Components (if needed but currently unused in main App logic as lazy loaded)
 // import { TradeForm } from './components/TradeForm'
 
 // Data
-import { holdings, positions, stocks, trades } from './data/stockData'
 import { SuspenseBoundary } from './boundaries/SuspenseBoundary';
+import { holdings, positions, stocks, trades } from './data/stockData';
 
 //skeleton
-import { TableSkeleton } from './skeletons/TableSkeleton';
 import { CardGridSkeleton } from './skeletons/CardGridSkeleton';
 import { FormSkeleton } from './skeletons/FormSkeleton';
+import { TableSkeleton } from './skeletons/TableSkeleton';
 
 // Types
-import type { Holding, Position, Stock, Trade } from './types/stock.types'
+import type { Stock, Trade } from './types/stock.types';
 
 // MODULE 2: Lazy (dynamic) import
 const LiveQuotesFeature = lazy(function() {
@@ -29,9 +23,7 @@ const PortfolioFeature = lazy(function() {
   return import('./features/portfolio/PortfolioFeature');
 });
  
-const PositionsFeature = lazy(function() {
-  return import('./features/positions/PositionsFeature');
-});
+
  
 const HoldingsFeature = lazy(function() {
   return import('./features/holdings/HoldingsFeature');
@@ -100,12 +92,7 @@ function App() {
         <PortfolioFeature availableStocks={stocks} />
       </SuspenseBoundary>
  
-      {/* ── FEATURE 3: Positions ── */}
-      <SuspenseBoundary
-        fallback={<TableSkeleton rows={5} cols={6} title="Positions" />}
-      >
-        <PositionsFeature positions={positions} />
-      </SuspenseBoundary>
+
  
       {/* ── FEATURE 4: Holdings ── */}
       <SuspenseBoundary
@@ -128,6 +115,7 @@ function App() {
           stocks={stocks}
           selectedStock={selectedStock}
           onSubmitTrade={handleNewTrade}
+          positions={positions}
         />
       </SuspenseBoundary>
  

@@ -1,6 +1,6 @@
-import type { Holdings, Positions, Stock, Trade } from '../types/stock.types';
+import type { Holding, Position, Stock, Trade } from '../types/stock.types';
 
-export const positions: Positions[] = [
+export const positions: Position[] = [
     // --- Existing 1-10 (Technology, Finance, Automotive) ---
     { id: 'p1', symbol: 'AAPL', Qty: 10, Avg_Price: 185.50, ltp: 264.58, pnl: 790.80 },
     { id: 'p2', symbol: 'NVDA', Qty: 25, Avg_Price: 145.00, ltp: 189.82, pnl: 1120.50 },
@@ -211,7 +211,7 @@ export const trades: Trade[] = [
 ];
 
 
-export const holdings: Holdings[] = [
+export const holdings: Holding[] = [
     {
         id: 'h1',
         symbol: 'AAPL',
