@@ -1,40 +1,40 @@
 import { create } from "zustand";
-import { positions } from "../data/stockData";
-import type { Position } from "../types/stock.types";
+import { holdings } from "../data/stockData";
+import type { Holding } from "../types/stock.types";
 
-interface PositionStore {
-  allPositions: Position[];
-  compareList: Position[];
+interface HoldingStore {
+  allHoldings: Holding[];
+  compareList: Holding[];
   
   // Actions
-  toggleCompare: (item: Position) => void;
+  toggleCompare: (item: Holding) => void;
   clearCompare:  () => void;
   isInCompare:   (id: string) => boolean;
 }
 
-export const usePositionStore = create<PositionStore>((set, get) => ({
+export const useHoldingStore = create<HoldingStore>((set, get) => ({
   // ── Initial State ──────────────────────────────────────────────────
-  allPositions: positions,
+  allHoldings: holdings,
   compareList: [],
 
   // ── toggleCompare ──────────────────────────────────────────────────
-  toggleCompare: (position) => {
+  toggleCompare: (holding) => {
     set((prev) => {
-      const alreadyIn = prev.compareList.some((p) => p.id === position.id);
+      const alreadyIn = prev.compareList.some((h) => h.id === holding.id);
 
       if (alreadyIn) {
         return {
-          compareList: prev.compareList.filter((p) => p.id !== position.id),
+          compareList: prev.compareList.filter((h) => h.id !== holding.id),
         };
       }
 
       if (prev.compareList.length >= 2) {
-        alert("You can compare up to 2 positions at a time.");
+        alert("You can compare up to 2 holdings at a time.");
         return prev;
       }
 
       return {
-        compareList: [...prev.compareList, position],
+        compareList: [...prev.compareList, holding],
       };
     });
   },
@@ -44,6 +44,6 @@ export const usePositionStore = create<PositionStore>((set, get) => ({
 
   // ── isInCompare ────────────────────────────────────────────────────
   isInCompare: (id) => {
-    return get().compareList.some((p) => p.id === id);
+    return get().compareList.some((h) => h.id === id);
   },
 }));

@@ -14,8 +14,10 @@ import { FormSkeleton } from './skeletons/FormSkeleton';
 import { TableSkeleton } from './skeletons/TableSkeleton';
 
 // Types
-import type { Stock, Trade } from './types/stock.types';
+import { HoldingComparePanel } from './components/HoldingComparePanel';
+import { PositionComparePanel } from './components/PositionComparePanel';
 import StockComparePanel from './components/StockComparePanel';
+import type { Stock, Trade } from './types/stock.types';
 
 // MODULE 2: Lazy (dynamic) import
 const LiveQuotesFeature = lazy(function() {
@@ -123,6 +125,8 @@ function App() {
       </SuspenseBoundary>
 
       <StockComparePanel/>
+      <HoldingComparePanel/>
+      <PositionComparePanel/>
  
     </div>
   );

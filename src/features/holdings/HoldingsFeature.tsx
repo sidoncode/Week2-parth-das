@@ -7,10 +7,10 @@ import {
   ResponsiveContainer,
   Tooltip
 } from 'recharts';
-import { DataTable } from '../../components/DataTable';
-import type { Holding } from '../../types/stock.types';
 import { useShallow } from 'zustand/shallow';
-import { usePositionStore } from '../../stores/usePositionStore';
+import { DataTable } from '../../components/DataTable';
+import { useHoldingStore } from '../../stores/useHoldingStore';
+import type { Holding } from '../../types/stock.types';
 
 interface HoldingsFeatureProps {
   holdings: Holding[];
@@ -44,10 +44,11 @@ function pnlCell(value: unknown, suffix: string = ''): React.ReactNode {
 const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
 
   // 1. Get the toggle functions from your store
-  const { toggleCompare, isInCompare } = usePositionStore(
+  const { toggleCompare, isInCompare } = useHoldingStore(
     useShallow((state) => ({
       toggleCompare: state.toggleCompare,
       isInCompare: state.isInCompare,
+      _listVersion: state.compareList.length 
     }))
   );
 
@@ -131,7 +132,7 @@ const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
                   const active = isInCompare(row.id);
                   return (
                     <button
-                      onClick={() => toggleCompare(row as any)}
+                      onClick={() => toggleCompare(row)}
                       style={{
                         padding: '4px 8px',
                         borderRadius: '4px',
