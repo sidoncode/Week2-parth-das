@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataTable } from "../../components/DataTable";
 import { SearchBar } from "../../components/SearchBar";
-import { StockCard } from "../../components/StockCard";
+import StockCard from "../../components/StockCard";
 import type { Stock } from "../../types/stock.types";
 
 const ROW_HEIGHT       = 44;

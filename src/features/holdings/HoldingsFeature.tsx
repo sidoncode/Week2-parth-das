@@ -9,6 +9,8 @@ import {
 } from 'recharts';
 import { DataTable } from '../../components/DataTable';
 import type { Holding } from '../../types/stock.types';
+import { useShallow } from 'zustand/shallow';
+import { usePositionStore } from '../../stores/usePositionStore';
 
 interface HoldingsFeatureProps {
   holdings: Holding[];
@@ -40,6 +42,15 @@ function pnlCell(value: unknown, suffix: string = ''): React.ReactNode {
 }
 
 const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
+
+  // 1. Get the toggle functions from your store
+  const { toggleCompare, isInCompare } = usePositionStore(
+    useShallow((state) => ({
+      toggleCompare: state.toggleCompare,
+      isInCompare: state.isInCompare,
+    }))
+  );
+
   // Prepare data for the Pie Chart
   const chartData = useMemo(() => {
     return holdings.map(h => ({
@@ -52,10 +63,10 @@ const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div style={{ 
-          backgroundColor: '#fff', 
-          padding: '10px', 
-          border: '1px solid #E5E7EB', 
+        <div style={{
+          backgroundColor: '#fff',
+          padding: '10px',
+          border: '1px solid #E5E7EB',
           borderRadius: '8px',
           boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
         }}>
@@ -75,14 +86,14 @@ const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
   return (
     <div style={{ marginBottom: 40 }}>
       <h2 style={{ color: '#1E40AF', marginBottom: 20 }}>Portfolio Allocation & Holdings</h2>
-      
-      <div style={{ 
-        display: 'flex', 
-        gap: 24, 
+
+      <div style={{
+        display: 'flex',
+        gap: 24,
         flexDirection: window.innerWidth < 1024 ? 'column' : 'row',
         alignItems: 'flex-start'
       }}>
-        
+
         {/* Table Section (Left/Top) */}
         <div style={{ flex: 1, width: '100%', minWidth: 0 }}>
           <DataTable<Holding>
@@ -92,24 +103,60 @@ const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
             pageSize={10}
             enableInfiniteScroll={true}
             columns={[
-              { key: 'symbol',        header: 'Symbol',         sortable: true },
-              { key: 'qty',           header: 'Qty',            sortable: true },
-              { key: 'investedValue', header: 'Invested Value', sortable: true,
+              { key: 'symbol', header: 'Symbol', sortable: true },
+              { key: 'qty', header: 'Qty', sortable: true },
+              {
+                key: 'investedValue',
+                header: 'Invested Value',
+                sortable: true,
                 render: (value) => '$' + Number(value).toLocaleString()
               },
-              { key: 'currentValue',  header: 'Current Value',  sortable: true,
+              {
+                key: 'currentValue',
+                header: 'Current Value',
+                sortable: true,
                 render: (value) => '$' + Number(value).toLocaleString()
               },
-              { key: 'totalReturn',   header: 'Total Return',   sortable: true,
+              {
+                key: 'totalReturn',
+                header: 'Total Return',
+                sortable: true,
                 render: (value) => pnlCell(value)
               },
+              // --- NEW TOGGLE COLUMN ---
+              {
+                key: 'id',
+                header: 'Compare',
+                render: (_, row) => {
+                  const active = isInCompare(row.id);
+                  return (
+                    <button
+                      onClick={() => toggleCompare(row as any)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        border: '1px solid #1E40AF',
+                        transition: 'all 0.2s',
+                        backgroundColor: active ? '#1E40AF' : 'transparent',
+                        color: active ? '#fff' : '#1E40AF',
+                      }}
+                    >
+                      {active ? '✓ Selected' : '+ Add'}
+                    </button>
+                  );
+                }
+              }
             ]}
           />
+
         </div>
 
         {/* Chart Section (Right/Bottom) */}
-        <div style={{ 
-          width: window.innerWidth < 1024 ? '100%' : '400px', 
+        <div style={{
+          width: window.innerWidth < 1024 ? '100%' : '400px',
           height: '400px',
           backgroundColor: '#fff',
           padding: '20px',
@@ -138,9 +185,9 @@ const HoldingsFeature: React.FC<HoldingsFeatureProps> = ({ holdings }) => {
                   ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
-                <Legend 
-                  verticalAlign="bottom" 
-                  height={36} 
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
                   iconType="circle"
                   formatter={(value: string) => <span style={{ color: '#4B5563', fontSize: '12px' }}>{value}</span>}
                 />

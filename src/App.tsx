@@ -15,6 +15,7 @@ import { TableSkeleton } from './skeletons/TableSkeleton';
 
 // Types
 import type { Stock, Trade } from './types/stock.types';
+import StockComparePanel from './components/StockComparePanel';
 
 // MODULE 2: Lazy (dynamic) import
 const LiveQuotesFeature = lazy(function() {
@@ -120,6 +121,8 @@ function App() {
           positions={positions}
         />
       </SuspenseBoundary>
+
+      <StockComparePanel/>
  
     </div>
   );
