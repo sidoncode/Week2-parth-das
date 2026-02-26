@@ -1,7 +1,6 @@
-import React, { lazy, Suspense } from 'react';
 import { DataTable } from '../../components/DataTable';
 import { TradeForm } from '../../components/TradeForm';
-import type { Position, Stock, Trade } from '../../types/stock.types';
+import type { Trade } from '../../types/stock.types';
 import { useTradeStore } from '../../stores/useTradeStore';
 import { useStockStore } from '../../stores/useStockStore';
 

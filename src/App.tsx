@@ -6,7 +6,6 @@ import './App.css';
 // Data
 import { SuspenseBoundary } from './boundaries/SuspenseBoundary';
 import MarketTicker from './components/MarketTicker';
-import { stocks } from './data/stockData';
 
 //skeleton
 import { CardGridSkeleton } from './skeletons/CardGridSkeleton';
